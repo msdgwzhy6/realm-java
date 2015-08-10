@@ -285,7 +285,6 @@ public class JNITableTest extends AndroidTestCase {
         try {
             Table table = rt.getTable(TABLENAME);
 
-            //try {  table.addAt(1, "NewValue"); fail("Exception expected when inserting in read transaction"); } catch (IllegalStateException e) { }
             try {
                 table.addEmptyRow();
                 fail("Exception expected when inserting in read transaction");
