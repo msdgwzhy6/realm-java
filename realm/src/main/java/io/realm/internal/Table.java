@@ -477,32 +477,38 @@ public class Table implements TableOrView, TableSchema, Closeable {
             Object value = values[(int)columnIndex];
             switch (colTypes[(int)columnIndex]) {
             case BOOLEAN:
-                setBoolean(columnIndex, rowIndex, (Boolean)value);
+                nativeSetBoolean(nativePtr, columnIndex, rowIndex, (Boolean)value);
                 break;
             case INTEGER:
                 long intValue = ((Number) value).longValue();
                 checkIntValueIsLegal(columnIndex, rowIndex, intValue);
-                setLong(columnIndex, rowIndex, intValue);
+                nativeSetLong(nativePtr, columnIndex, rowIndex, intValue);
                 break;
             case FLOAT:
-                setFloat(columnIndex, rowIndex, (Float) value);
+                nativeSetFloat(nativePtr, columnIndex, rowIndex, (Float) value);
                 break;
             case DOUBLE:
-                setDouble(columnIndex, rowIndex, (Double) value);
+                nativeSetDouble(nativePtr, columnIndex, rowIndex, (Double) value);
                 break;
             case STRING:
                 String stringValue = (String) value;
                 checkStringValueIsLegal(columnIndex, rowIndex, stringValue);
-                setString(columnIndex, rowIndex, (String)value);
+                nativeSetString(nativePtr, columnIndex, rowIndex, (String)value);
                 break;
             case DATE:
-                setDate(columnIndex, rowIndex, (Date)value);
+                if (value == null)
+                    throw new IllegalArgumentException("Null Date is not allowed.");
+                nativeSetDate(nativePtr, columnIndex, rowIndex, ((Date)value).getTime()/1000);
                 break;
             case MIXED:
-                setMixed(columnIndex, rowIndex, Mixed.mixedValue(value));
+                if (value == null)
+                    throw new IllegalArgumentException("Null Mixed data is not allowed");
+                nativeSetMixed(nativePtr, columnIndex, rowIndex, Mixed.mixedValue(value));
                 break;
             case BINARY:
-                setBinaryByteArray(columnIndex, rowIndex, (byte[])value);
+                if (value == null)
+                    throw new IllegalArgumentException("Null Array is not allowed");
+                nativeSetByteArray(nativePtr, columnIndex, rowIndex, (byte[])value);
                 break;
             case TABLE:
                 insertSubTable(columnIndex, rowIndex, value);
